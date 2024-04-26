@@ -141,3 +141,12 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 IMPORT_EXPORT_FORMATS = [XLSX]
+
+CELERY_TIMEZONE = "Asia/Tashkent"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BACKEND = os.environ.get("CELERY_BROKER_URL", default="redis://127.0.0.1:6379/0")
+
+# celery task intervals
+UPDATE_PRODUCTS_INTERVAL = os.environ.get("UPDATE_PRODUCTS_INTERVAL", default=1)  # in minutes
+UPDATE_PRODUCT_ATTRIBUTES_INTERVAL = os.environ.get("UPDATE_PRODUCT_ATTRIBUTES_INTERVAL", default=2)  # in minutes
