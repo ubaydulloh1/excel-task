@@ -47,6 +47,7 @@ MY_APPS = [
     "apps.users",
     "apps.common",
     "apps.lfl",
+    "apps.billz",
 ]
 THIRD_PARTY_APPS = ["rest_framework", "import_export", ]
 INSTALLED_APPS = DJANGO_APPS + MY_APPS + THIRD_PARTY_APPS
