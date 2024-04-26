@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from apps.common.models import BaseModel
 
@@ -35,6 +37,7 @@ class Product(BillzBaseModel):
     measurement_unit = models.ForeignKey(
         to="MeasurementUnit", on_delete=models.SET_NULL, related_name="products", null=True
     )
+    attributes = models.ManyToManyField(to="ProductAttribute", related_name="products", blank=True)
 
     name = models.CharField(max_length=255)
     main_image = models.ImageField(upload_to="billz/products/")
@@ -43,6 +46,7 @@ class Product(BillzBaseModel):
     sku = models.CharField(max_length=50)
     description = models.TextField(null=True, blank=True)
     is_variative = models.BooleanField()
+    is_marked = models.BooleanField(default=False)
     rmt_updated_at = models.DateTimeField(null=True)
 
     def __str__(self):
@@ -82,11 +86,20 @@ class Shop(BillzBaseModel):
         verbose_name = "Shop"
         verbose_name_plural = "Shops"
 
-    company_id = models.UUIDField()
+    company_id = models.UUIDField(null=True)
     name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
+
+
+class ProductAttribute(BillzBaseModel):
+    class Meta:
+        db_table = "billz_product_attribute"
+        verbose_name = "Product attribute"
+        verbose_name_plural = "Product attributes"
+
+    value = models.CharField()
 
 
 class ProductShopPrice(BillzBaseModel):
@@ -95,6 +108,7 @@ class ProductShopPrice(BillzBaseModel):
         verbose_name = "Product shop price"
         verbose_name_plural = "Product shop prices"
 
+    remote_id = models.UUIDField(default=uuid.uuid4)
     shop = models.ForeignKey(to="Shop", on_delete=models.CASCADE, related_name="products")
     product = models.ForeignKey(to="Product", on_delete=models.CASCADE, related_name="shop_prices")
     retail_price = models.DecimalField(max_digits=20, decimal_places=2)
